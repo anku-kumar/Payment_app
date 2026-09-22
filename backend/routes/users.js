@@ -67,12 +67,13 @@ userRouter.post('/signin', async (req, res)=>{
         res.status(411).json({
             message: "Invalid Inputs"
         })
+        return;
     }
     const username = req.body.username
     const password = req.body.password
     const existinguser = await User.findOne({username})
     if(existinguser!=null){
-        const isMatch = bcrypt.compare(password, existinguser.password_hash)
+        const isMatch = await bcrypt.compare(password, existinguser.password_hash)
         if(isMatch){
             const userId = existinguser._id
             const token = jwt.sign({userId}, JWT_secret)
@@ -81,15 +82,15 @@ userRouter.post('/signin', async (req, res)=>{
             })
         }
         else{
-            res.json({
+            res.status(401).json({
                 message: "Invalid password"
             })
         }
         return;
     }
     else{
-        res.status(411).json({
-            meassage: "Error while logging in"
+        return res.status(411).json({
+            message: "Error while logging in"
         })
     }
 })
@@ -136,9 +137,12 @@ userRouter.put('/', authMiddleware, async (req, res)=>{
     }
 })
 
-userRouter.get('/bulk', async (req, res)=>{
+userRouter.get('/bulk', authMiddleware, async (req, res)=>{
     const filter = req.query.filter || ""
+    const userId = req.userId;
+
     const users = await User.find({
+        _id: { $ne: userId},
         $or: [
             {
                 firstname: {

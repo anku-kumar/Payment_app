@@ -1,25 +1,36 @@
 import React from 'react'
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, BrowserRouter, Routes, Route } from 'react-router-dom';
 import axios from "axios"
 import {useState} from 'react'
+import { useNavigate } from 'react-router-dom';
+import SuccessPage from './SuccessPage'
 
 const SendMoney = () => {
     const [searchParams]=useSearchParams()
     const id=searchParams.get('id')
     const name=searchParams.get('name')
     const [amount, setAmount]=useState(0)
+    const navigate=useNavigate()
 
     const transferMoney=async()=>{
-        const response = await axios.post("http://localhost:3000/api/v1/account/transfer", {
-            to: id,
-            amount
-        },
-        {
-            headers: {
-            "Authorization": "Bearer "+ localStorage.getItem('token')
+        try{
+            const response = await axios.post("http://localhost:3000/api/v1/account/transfer", {
+                to: id,
+                amount: Number(amount)
+            },
+            {
+                headers: {
+                "Authorization": "Bearer "+ localStorage.getItem('token')
+                }
             }
+            )
+            
+            navigate('/success')
+        } catch(error){
+            console.log(error)
+            alert(error.response.data.message)
         }
-        )
+        
     }
 
   return (

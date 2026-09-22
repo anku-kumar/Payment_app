@@ -1,9 +1,10 @@
 const { Router } = require("express")
 const accountRouter = Router()
 const { authMiddleware } = require('../middleware')
-const { Account } = require("../db/index")
+const { User, Account } = require("../db/index")
 const zod = require("zod")
 const { default: mongoose } = require("mongoose")
+
 
 
 accountRouter.get('/balance', authMiddleware, async (req, res)=>{
@@ -31,7 +32,7 @@ const transferBody = zod.object({
 accountRouter.post('/transfer', authMiddleware, async (req, res)=>{
     const { success } = transferBody.safeParse(req.body)
     if(!success){
-        return res.json({
+        return res.status(411).json({
             message: "Invalid Inputs"
         })
     }
@@ -98,8 +99,28 @@ accountRouter.post('/transfer', authMiddleware, async (req, res)=>{
 
 
 
-accountRouter.get('/', (req, res)=>{
-    res.send("hi from accountRouter")
+accountRouter.get('/', authMiddleware, async (req, res)=>{
+    try{
+        const userId = req.userId
+        const userAccount = await Account.findOne({userId})
+        .populate("userId", "firstname lastname username")
+        if(userAccount){
+            res.status(200).json({
+                userAccount
+            })
+            return
+        }
+        else{
+            return res.status(404).json({
+                message: "Account not found"
+            });
+        }
+    } catch(error){
+        console.log(error)
+        return res.status(500).json({
+            message: "Internal Server Error"
+        })
+    }
 })
 
 module.exports = {

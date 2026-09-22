@@ -4,9 +4,9 @@ import Signup from '../components/Signup'
 import Signin from '../components/Signin'
 import Dashboard from '../components/Dashboard'
 import SendMoney from '../components/SendMoney'
+import SuccessPage from '../components/SuccessPage'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
@@ -17,6 +17,7 @@ function App() {
             <Route path='/signin' element={<Signin/>}/>
             <Route path='/dashboard' element={<Dashboard/>}/>
             <Route path='/send' element={<SendMoney/>}/>
+            <Route path='/success' element={<SuccessPage/>}/>
           </Routes>
         </BrowserRouter>
       {/* </div> */}

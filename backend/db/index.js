@@ -1,5 +1,6 @@
+const {DB_URL} = require('../../secrets.js')
 const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://ak:ak12345@cluster0.udvluvo.mongodb.net/payment_app')
+mongoose.connect(DB_URL)
 
 const userSchema = new mongoose.Schema({
     firstname: {

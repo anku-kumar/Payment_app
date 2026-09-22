@@ -6,6 +6,7 @@ import { InputBox } from '../Small Components/InputBox'
 import ButtonComp from '../Small Components/ButtonComp'
 import BottomWarning from '../Small Components/BottomWarning'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const Signup = () => {
     const [firstname, setFirstName]=useState("")
@@ -13,14 +14,23 @@ const Signup = () => {
     const [username, setusername]=useState("")
     const [password, setPassword]=useState("")
 
+    const navigate = useNavigate()
+
     const BackendCall = async ()=>{
-        const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
-            firstname,
-            lastname,
-            username,
-            password,
-        })
-        localStorage.setItem("token", response.data.token)
+        try{
+            const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
+                firstname,
+                lastname,
+                username,
+                password,
+            })
+
+            localStorage.setItem("token", response.data.token)
+            navigate("/dashboard")
+        } catch(error){
+            console.log(error.response.data.message)
+            alert(error.response.data.message)
+        }
     }
 
   return (

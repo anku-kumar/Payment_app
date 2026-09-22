@@ -4,7 +4,7 @@ const Appbar = ({name}) => {
   return (
     <div className="h-16 bg-white shadow flex items-center justify-between px-6">
       <div className="text-2xl font-bold text-blue-600">
-        RamBharose
+        BindassPay
       </div>
       <div className="flex items-center gap-4">
         <span className="text-gray-700 font-medium">

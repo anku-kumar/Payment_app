@@ -10,8 +10,18 @@ const Users = () => {
     
     useEffect(()=>{
         const fetchUsers= async ()=>{
-            const response = await axios.get("http://localhost:3000/api/v1/user/bulk?filter=" + search)
-            setUsers(response.data.user)
+            try{
+                const token = localStorage.getItem('token')
+
+                const response = await axios.get("http://localhost:3000/api/v1/user/bulk?filter=" + search, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                setUsers(response.data.user)
+            } catch(error){
+                console.log(error)
+            }
         }
         fetchUsers();
     }, [search])
