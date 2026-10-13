@@ -13,7 +13,7 @@ const authMiddleware = (req, res, next)=>{
         next()
     } catch(err){
         res.status(403).json({
-            message: "Bhag jaa yaha se"
+            message: "Unauthorized to Access"
         })
         return 
     }
